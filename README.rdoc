@@ -1,28 +1,40 @@
-== README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Polymorphic associations in Ruby on Rails
 
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+We have recently been working with a project where Polymorphic Associations have been used extensively. Here we'll give an example of how they can be used.
+
+Imagine a school or college system where both students and teachers can add posts. The post has an author but this author could be a student or a teacher. The students and teachers can also add many posts. Therefore we need an association between the Student, Teacher and Post models
+
+
+	$ rails generate model post author:references{polymorphic}:index title:string body:text
+	$ rails generate model student name:string email:string
+	$ rails generate model teacher name:string email:string office:integer
+	
+Here we've created the post model with the author reference set as polymorphic and an index, along with a title string and body text. The student and teacher models both features a name and email, but with the office number added for a teacher.
+
+	class Post < ActiveRecord::Base
+	  belongs_to :author, polymorphic: true
+	end
+	The Post model will already be setup correctly, but we need to add has_many to the Student and Teacher models.
+
+	class Student < ActiveRecord::Base
+	  has_many :posts, as: :author
+	end
+
+	class Teacher < ActiveRecord::Base
+	  has_many :posts, as: :author
+	end
+	
+	In the Student show section pass studentid to the new posts
+	<%= link_to t('.new_post',new_post_path(:sid => @student)  %>	
+
+	Find Author before save the post 
+	def get_author
+  	@author = Student.find(params[:sid]) if params[:sid]  	
+  	end
+  	
+  	Save post related to the authors
+  	def create
+  	@post = Post.new(params[:post])
+  	@post.author = @author
+  	end
