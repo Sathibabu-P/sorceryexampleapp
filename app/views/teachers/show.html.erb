@@ -1,0 +1,25 @@
+<%- model_class = Teacher -%>
+<div class="page-header">
+  <h1><%= @teacher.name %></h1>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Post Name</th>
+      <th>Post Author</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>     
+        <td><%= post.title %></td>
+        <td><%= post.author.name %></td> 
+
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new_post', :default => t("helpers.links.new_post")),
+              new_post_path(:tid => @teacher), :class => 'btn btn-default'  %>
