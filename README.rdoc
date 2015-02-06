@@ -1,4 +1,4 @@
-####Polymorphic associations in Ruby on Rails
+#Polymorphic associations in Ruby on Rails
 
 
 #####We have recently been working with a project where Polymorphic Associations have been used extensively. Here we'll give an example of how they can be used.
