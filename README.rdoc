@@ -12,9 +12,9 @@
 	
 ======Here we've created the post model with the author reference set as polymorphic and an index, along with a title string and body text. The student and teacher models both features a name and email, but with the office number added for a teacher.
 
-	class Post < ActiveRecord::Base
-	  belongs_to :author, polymorphic: true
-	end	
+====class Post < ActiveRecord::Base
+====belongs_to :author, polymorphic: true
+====end	
 ======The Post model will already be setup correctly, but we need to add has_many to the Student and Teacher models.
 
 ====class Student < ActiveRecord::Base
@@ -25,15 +25,13 @@
 ====has_many :posts, as: :author
 ====end
 
+======In the Student show section pass studentid to the new posts
+====<%= link_to t('.new_post',new_post_path(:sid => @student)  %>
 
-	
-	In the Student show section pass studentid to the new posts
-	<%= link_to t('.new_post',new_post_path(:sid => @student)  %>	
-
-		Find Author before save the post 
-		def get_author
-		  @author = Student.find(params[:sid]) if params[:sid]  	
-		end
+======Find Author before save the post 
+====def get_author
+====@author = Student.find(params[:sid]) if params[:sid]  	
+====end
   	
 	  	  Save post related to the authors
 		  def create
