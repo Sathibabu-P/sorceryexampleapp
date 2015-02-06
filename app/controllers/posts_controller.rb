@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-	before_action :get_author, only: [:new,:edit,:destroy]
+	before_action :get_author, only: [:new,:edit,:destroy,:show]
 	before_action :set_author, only: [:create,:update]
   def index
   	@posts = Post.all
@@ -7,10 +7,11 @@ class PostsController < ApplicationController
 
   def new
   	@post = Post.new
+
   end
 
   def show
-  	@post = Post.find(params[:id])
+  	@post = Post.find(params[:id])  	
   end
 
   def create
@@ -36,7 +37,7 @@ class PostsController < ApplicationController
   	@pagedirect = @post   
   	@pagedirect = @author if @author
   	 respond_to do |format|
-      if @post.save
+      if @post.update(post_params)
         format.html { redirect_to @pagedirect, notice: 'Post was successfully created.' }
         format.json { render :show, status: :created, location: @pagedirect }
       else

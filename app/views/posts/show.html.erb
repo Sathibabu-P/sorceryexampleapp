@@ -15,7 +15,9 @@
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              posts_path, :class => 'btn btn-default'  %>
+              @redirect_to, :class => 'btn btn-default'  %>
+              <% if !@student and !@teacher %>
+            
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_post_path(@post), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -23,3 +25,4 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+              <% end %>
