@@ -32,10 +32,11 @@
 ====def get_author
 ====@author = Student.find(params[:sid]) if params[:sid]  	
 ====end
-Save post related to the authors
-def create
-@post = Post.new(params[:post])
-@post.author = @author
-end
+
+======Save post related to the authors
+====def create
+====@post = Post.new(params[:post])
+====@post.author = @author
+====end
   	
 	  	
