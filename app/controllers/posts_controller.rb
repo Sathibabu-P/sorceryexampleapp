@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-	before_action :get_author, only: [:new,:edit]
+	before_action :get_author, only: [:new,:edit,:destroy]
 	before_action :set_author, only: [:create,:update]
   def index
   	@posts = Post.all
@@ -14,7 +14,7 @@ class PostsController < ApplicationController
   	@post.author = @author
   	 respond_to do |format|
       if @post.save
-        format.html { redirect_to @author, notice: 'Area was successfully created.' }
+        format.html { redirect_to @author, notice: 'Post was successfully created.' }
         format.json { render :show, status: :created, location: @author }
       else
         format.html { render :new }
@@ -24,17 +24,49 @@ class PostsController < ApplicationController
   end
 
   def edit
+  	@post = Post.find(params[:id])
   end
 
+  def update
+  	@post = Post.find(params[:id])
+  	 respond_to do |format|
+      if @post.save
+        format.html { redirect_to @author, notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: @author }
+      else
+        format.html { render :new }
+        format.json { render json: @author.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def destroy
+  	@pagedirect = @student if @student
+  	@pagedirect = @teacher if @teacher  	
+  	@post = Post.find(params[:id])  
+    @post.destroy
+    respond_to do |format|
+      format.html { redirect_to @pagedirect, notice: 'Post was successfully destroyed.' }
+      format.json { head :no_content }
+    end
+    
+  end
+  #around_filter :catch_not_found
   private
 
+  def catch_not_found
+  yield
+  rescue ActiveRecord::RecordNotFound
+  redirect_to root_url, :flash => { :error => "Record not found." }
+  end
+
   def get_author
-  	@student = Student.find(params[:sid]) if params[:sid]
-  	@teacher = Teacher.find(params[:tid]) if params[:tid]
+  	#@student = Student.find_by_id(params[:sid]) if params[:sid]
+  	@teacher = Teacher.find_by_id(params[:tid]) if params[:tid]
   end
   def set_author
-    @author = Student.find(params[:post][:hidden_sid]) if params[:post][:hidden_sid].present? 
-    @author = Teacher.find(params[:post][:hidden_tid]) if params[:post][:hidden_tid].present?  
+    @author = Student.find_by_id(params[:post][:hidden_sid]) if params[:post][:hidden_sid].present? 
+    @author = Teacher.find_by_id(params[:post][:hidden_tid]) if params[:post][:hidden_tid].present?  
   end
 
   def post_params
