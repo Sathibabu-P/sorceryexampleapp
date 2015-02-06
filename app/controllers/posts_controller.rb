@@ -9,6 +9,10 @@ class PostsController < ApplicationController
   	@post = Post.new
   end
 
+  def show
+  	@post = Post.find(params[:id])
+  end
+
   def create
   	@post = Post.new(post_params)
   	@post.author = @author
@@ -29,21 +33,24 @@ class PostsController < ApplicationController
 
   def update
   	@post = Post.find(params[:id])
+  	@pagedirect = @post   
+  	@pagedirect = @author if @author
   	 respond_to do |format|
       if @post.save
-        format.html { redirect_to @author, notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @author }
+        format.html { redirect_to @pagedirect, notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: @pagedirect }
       else
         format.html { render :new }
-        format.json { render json: @author.errors, status: :unprocessable_entity }
+        format.json { render json: @pagedirect.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  def destroy
+  def destroy  		
+  	@post = Post.find(params[:id])
+  	@pagedirect = @post   
   	@pagedirect = @student if @student
-  	@pagedirect = @teacher if @teacher  	
-  	@post = Post.find(params[:id])  
+  	@pagedirect = @teacher if @teacher    
     @post.destroy
     respond_to do |format|
       format.html { redirect_to @pagedirect, notice: 'Post was successfully destroyed.' }
@@ -61,6 +68,7 @@ class PostsController < ApplicationController
   end
 
   def get_author
+  	@redirect_to = posts_path
   	@redirect_to=@student = Student.find_by_id(params[:sid]) if params[:sid]
   	@redirect_to=@teacher = Teacher.find_by_id(params[:tid]) if params[:tid]
 
