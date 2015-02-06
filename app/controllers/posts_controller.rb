@@ -61,8 +61,9 @@ class PostsController < ApplicationController
   end
 
   def get_author
-  	#@student = Student.find_by_id(params[:sid]) if params[:sid]
-  	@teacher = Teacher.find_by_id(params[:tid]) if params[:tid]
+  	@redirect_to=@student = Student.find_by_id(params[:sid]) if params[:sid]
+  	@redirect_to=@teacher = Teacher.find_by_id(params[:tid]) if params[:tid]
+
   end
   def set_author
     @author = Student.find_by_id(params[:post][:hidden_sid]) if params[:post][:hidden_sid].present? 

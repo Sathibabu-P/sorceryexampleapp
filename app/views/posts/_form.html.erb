@@ -32,9 +32,9 @@
     <%= error_span(@post[:body]) %>
   </div>
 <br>
-   
+
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            posts_path, :class => 'btn btn-default' %>
+            @redirect_to, :class => 'btn btn-default' %>
 
 <% end %>
