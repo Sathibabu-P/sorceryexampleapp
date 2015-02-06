@@ -5,7 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
+   
       <th><%= model_class.human_attribute_name(:name) %></th>
       <th><%= model_class.human_attribute_name(:email) %></th>
       <th><%= model_class.human_attribute_name(:post_count) %></th>
@@ -15,8 +15,7 @@
   <tbody>
     <% @teachers.each do |teacher| %>
       <tr>
-        <td><%= link_to teacher.id, teacher_path(teacher) %></td>
-        <td><%= teacher.name %></td>
+        <td><%= link_to teacher.name, teacher_path(teacher) %></td>       
         <td><%= teacher.email %></td>
        <td><%= teacher.posts.size %></td>
         <td>
