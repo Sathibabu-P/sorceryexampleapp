@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
  
+  get 'oauths/oauth'
+
+  get 'oauths/callback'
+
   get 'password_resets/edit'
 
  root :to => 'users#index'
@@ -8,11 +12,15 @@ Rails.application.routes.draw do
   member do
     get :activate
   end
-end
+  end
   resources :password_resets
   get 'login' => 'user_sessions#new', :as => :login
   get 'register' => 'users#new', :as => :register
   post 'logout' => 'user_sessions#destroy', :as => :logout
+
+  post "oauth/callback" => "oauths#callback"
+  get "oauth/callback" => "oauths#callback" # for use with Github, Facebook
+  get "oauth/:provider" => "oauths#oauth", :as => :auth_at_provider
 
   resources :posts
   resources :teachers do 

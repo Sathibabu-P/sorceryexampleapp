@@ -2,7 +2,7 @@
 # The default is nothing which will include only core features (password encryption, login/logout).
 # Available submodules are: :user_activation, :http_basic_auth, :remember_me,
 # :reset_password, :session_timeout, :brute_force_protection, :activity_logging, :external
-Rails.application.config.sorcery.submodules = [:remember_me, :activity_logging, :user_activation, :reset_password]
+Rails.application.config.sorcery.submodules = [:remember_me, :activity_logging, :user_activation, :reset_password, :brute_force_protection, :external]
 
 # Here you can configure each submodule's features.
 Rails.application.config.sorcery.configure do |config|
@@ -77,7 +77,7 @@ Rails.application.config.sorcery.configure do |config|
   # Default: `[]`
   #
   # config.external_providers =
-
+  config.external_providers = [:twitter, :facebook]
 
   # You can change it by your local ca_file. i.e. '/etc/pki/tls/certs/ca-bundle.crt'
   # Path to ca_file. By default use a internal ca-bundle.crt.
@@ -114,13 +114,18 @@ Rails.application.config.sorcery.configure do |config|
   # config.twitter.secret = ""
   # config.twitter.callback_url = "http://0.0.0.0:3000/oauth/callback?provider=twitter"
   # config.twitter.user_info_mapping = {:email => "screen_name"}
-  #
-  # config.facebook.key = ""
-  # config.facebook.secret = ""
-  # config.facebook.callback_url = "http://0.0.0.0:3000/oauth/callback?provider=facebook"
-  # config.facebook.user_info_mapping = {:email => "name"}
-  # config.facebook.access_permissions = ["email", "publish_stream"]
-  # config.facebook.display = "page"
+  config.twitter.key = "JRJHP9qlVDKjMKgO26LRETS6U"
+  config.twitter.secret = "EIe7h2oxi2BzozsmDIaTHh7SQVgcBs8qRGorI9wCD06Hu1Dt07"
+  config.twitter.callback_url = "http://localhost:3000/oauth/callback?provider=twitter"
+  config.twitter.user_info_mapping = {:email => "screen_name"}
+
+  config.facebook.key = "1634371836786634"
+  config.facebook.secret = "b02d4c9d14adb9f575fcf62203f7676d"
+  config.facebook.callback_url = "http://localhost:3000/oauth/callback?provider=facebook"
+  config.facebook.user_info_mapping = {:email => "email"}
+  #config.facebook.display = "popup"
+  config.facebook.access_permissions = ["email", "publish_stream"]
+  config.facebook.display = "popup"
   #
   # config.github.key = ""
   # config.github.secret = ""
@@ -177,7 +182,16 @@ Rails.application.config.sorcery.configure do |config|
     # Default: `[:email]`
     #
     user.username_attribute_names = [:email]
-
+    user.remember_me_for = 604800
+    user.user_activation_mailer = UserMailer
+    user.activation_success_email_method_name = nil
+    user.reset_password_mailer = UserMailer
+    user.reset_password_email_method_name = :reset_password_email
+    user.reset_password_expiration_period = 10.minutes
+    user.reset_password_time_between_emails = nil
+    user.consecutive_login_retries_amount_limit = 3
+    user.login_lock_time_period  = 2.minutes
+    user.authentications_class = Authentication
 
     # change *virtual* password attribute, the one which is used until an encrypted one is generated.
     # Default: `:password`
@@ -250,8 +264,7 @@ Rails.application.config.sorcery.configure do |config|
     # How long in seconds the session length will be
     # Default: `604800`
     #
-     user.remember_me_for = 604800
-
+    
 
     # -- user_activation --
     # the attribute name to hold activation state (active/pending).
@@ -281,8 +294,7 @@ Rails.application.config.sorcery.configure do |config|
     # your mailer class. Required.
     # Default: `nil`
     #
-    user.user_activation_mailer = UserMailer
-
+   
 
     # when true sorcery will not automatically
     # email activation details and allow you to
@@ -301,7 +313,7 @@ Rails.application.config.sorcery.configure do |config|
     # activation success email method on your mailer class.
     # Default: `:activation_success_email`
     #
-    user.activation_success_email_method_name = nil
+   
 
 
     # do you want to prevent or allow users that did not activate by email to login?
@@ -332,13 +344,13 @@ Rails.application.config.sorcery.configure do |config|
     # mailer class. Needed.
     # Default: `nil`
     #
-    user.reset_password_mailer = UserMailer
+    
 
 
     # reset password email method on your mailer class.
     # Default: `:reset_password_email`
     #
-    user.reset_password_email_method_name = :reset_password_email
+    
 
 
     # when true sorcery will not automatically
@@ -352,13 +364,13 @@ Rails.application.config.sorcery.configure do |config|
     # how many seconds before the reset request expires. nil for never expires.
     # Default: `nil`
     #
-    # user.reset_password_expiration_period =
+    
 
 
     # hammering protection, how long in seconds to wait before allowing another email to be sent.
     # Default: `5 * 60`
     #
-    # user.reset_password_time_between_emails =
+    
 
 
     # -- brute_force_protection --
@@ -377,13 +389,13 @@ Rails.application.config.sorcery.configure do |config|
     # How many failed logins allowed.
     # Default: `50`
     #
-    # user.consecutive_login_retries_amount_limit =
+    
 
 
     # How long the user should be banned. in seconds. 0 for permanent.
     # Default: `60 * 60`
     #
-    # user.login_lock_time_period =
+    
 
     # Unlock token attribute name
     # Default: `:unlock_token`
@@ -435,7 +447,7 @@ Rails.application.config.sorcery.configure do |config|
     # Class which holds the various external provider data for this user.
     # Default: `nil`
     #
-    # user.authentications_class =
+    
 
 
     # User's identifier in authentications class.
@@ -458,5 +470,5 @@ Rails.application.config.sorcery.configure do |config|
 
   # This line must come after the 'user config' block.
   # Define which model authenticates with sorcery.
-  config.user_class = "User"
+  config.user_class = User
 end

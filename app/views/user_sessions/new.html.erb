@@ -5,6 +5,8 @@
   </div>
   <div class="panel-body">
 <%= render 'form' %>
-<%= link_to 'Forgot Password?', new_password_reset_path %>
+<%= link_to 'Forgot Password?', new_password_reset_path %><br>
+<%= link_to 'Login with Twitter', auth_at_provider_path(:provider => :twitter) %> |
+<%= link_to 'Login with Facebook', auth_at_provider_path(:provider => :facebook) %> 
 </div>
 </div>
