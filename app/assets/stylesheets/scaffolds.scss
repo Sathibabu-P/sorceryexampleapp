@@ -39,10 +39,10 @@ div {
   color: green;
 }
 
-.field_with_errors {
+.field_with_errors input{
   padding: 2px;
-  background-color: red;
-  display: table;
+  border-color: #A94459;
+ 
 }
 
 #error_explanation {

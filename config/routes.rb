@@ -1,5 +1,19 @@
 Rails.application.routes.draw do
  
+  get 'password_resets/edit'
+
+ root :to => 'users#index'
+ resources :user_sessions
+ resources :users do
+  member do
+    get :activate
+  end
+end
+  resources :password_resets
+  get 'login' => 'user_sessions#new', :as => :login
+  get 'register' => 'users#new', :as => :register
+  post 'logout' => 'user_sessions#destroy', :as => :logout
+
   resources :posts
   resources :teachers do 
     resources :posts  
@@ -12,7 +26,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'students#index'
+  #root 'students#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
